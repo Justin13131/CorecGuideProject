@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Machine Help</title>
+  <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+<div class="page">
+  <h1>Machine Help</h1>
+
+  <div class="button-row">
+    <button class="gym-map-btn" onclick="showMachines('chest')">Chest</button>
+    <button class="gym-map-btn" onclick="showMachines('bicep')">Bicep</button>
+    <button class="gym-map-btn" onclick="showMachines('legs')">Legs</button>
+  </div>
+
+  <div class="card">
+    <p class="card-title">Tap a machine:</p>
+
+    <div class="button-grid" id="machineGrid"></div>
+  </div>
+
+  <div class="card info-card" id="infoBox">
+    <p class="card-title">How to use:</p>
+    <p>Select a machine</p>
+  </div>
+
+  <div class="back-container">
+    <a href="index.html">
+      <button class="gym-map-btn">Back</button>
+    </a>
+  </div>
+</div>
+
+<script>
+  const machineGroups = {
+    chest: ["Chest Press","Pec Fly","Incline Press","Decline Press","Cable Fly","Push-Up Station"],
+    bicep: ["Bicep Curl","Hammer Curl","Preacher Curl","Cable Curl","EZ Bar Curl","Concentration Curl"],
+    legs: ["Leg Press","Squat Rack","Leg Extension","Leg Curl","Calf Raise","Hack Squat"]
+  };
+
+  const machineInfo = {
+
+    // 🔴 CHEST
+    "Chest Press": [
+      "Adjust the seat so handles are at chest level.",
+      "Grip the handles and keep your back flat.",
+      "Push forward and return slowly."
+    ],
+    "Pec Fly": [
+      "Sit upright and align arms with pads.",
+      "Bring arms together in front of you.",
+      "Return slowly to the start."
+    ],
+    "Incline Press": [
+      "Set seat for upper chest alignment.",
+      "Push handles upward at an angle.",
+      "Lower slowly with control."
+    ],
+    "Decline Press": [
+      "Position handles at lower chest level.",
+      "Push forward in a controlled motion.",
+      "Return slowly without locking arms."
+    ],
+    "Cable Fly": [
+      "Grab both handles and step forward.",
+      "Bring hands together in front.",
+      "Return slowly to stretched position."
+    ],
+    "Push-Up Station": [
+      "Place hands on bars and keep body straight.",
+      "Lower chest toward bars.",
+      "Push back up to starting position."
+    ],
+
+    // 🔵 BICEP
+    "Bicep Curl": [
+      "Hold handles with palms facing up.",
+      "Curl toward your shoulders.",
+      "Lower slowly without swinging."
+    ],
+    "Hammer Curl": [
+      "Hold handles with palms facing inward.",
+      "Curl upward keeping elbows still.",
+      "Lower slowly back down."
+    ],
+    "Preacher Curl": [
+      "Rest arms on the pad.",
+      "Curl the weight upward.",
+      "Lower slowly to full stretch."
+    ],
+    "Cable Curl": [
+      "Grab cable bar with both hands.",
+      "Curl toward chest keeping elbows in.",
+      "Lower slowly with control."
+    ],
+    "EZ Bar Curl": [
+      "Hold angled bar with both hands.",
+      "Curl bar toward shoulders.",
+      "Lower slowly without momentum."
+    ],
+    "Concentration Curl": [
+      "Sit and brace elbow on thigh.",
+      "Curl weight upward.",
+      "Lower slowly under control."
+    ],
+
+    // 🟢 LEGS
+    "Leg Press": [
+      "Place feet shoulder-width on platform.",
+      "Push platform until legs extend.",
+      "Return slowly without locking knees."
+    ],
+    "Squat Rack": [
+      "Position bar on upper back.",
+      "Lower into squat position.",
+      "Push up through your heels."
+    ],
+    "Leg Extension": [
+      "Sit and place ankles behind pad.",
+      "Extend legs until straight.",
+      "Lower slowly back down."
+    ],
+    "Leg Curl": [
+      "Position legs under pad.",
+      "Curl heels toward your body.",
+      "Return slowly to start."
+    ],
+    "Calf Raise": [
+      "Place toes on platform edge.",
+      "Raise heels upward.",
+      "Lower heels slowly below platform."
+    ],
+    "Hack Squat": [
+      "Stand under pads with feet forward.",
+      "Lower into squat position.",
+      "Push back up to standing."
+    ]
+  };
+
+  function showMachines(group) {
+    const grid = document.getElementById("machineGrid");
+    grid.innerHTML = "";
+
+    machineGroups[group].forEach(machine => {
+      const btn = document.createElement("button");
+      btn.className = "machine-btn";
+      btn.textContent = machine;
+
+      btn.onclick = () => showInfo(machine);
+
+      grid.appendChild(btn);
+    });
+  }
+
+  function showInfo(machine) {
+    const box = document.getElementById("infoBox");
+    const steps = machineInfo[machine] || ["Step 1","Step 2","Step 3"];
+
+    box.innerHTML = `
+        <p class="card-title">${machine}</p>
+        <ol>
+          <li>${steps[0]}</li>
+          <li>${steps[1]}</li>
+          <li>${steps[2]}</li>
+        </ol>
+      `;
+  }
+
+  window.onload = () => showMachines("chest");
+</script>
+</body>
+</html>

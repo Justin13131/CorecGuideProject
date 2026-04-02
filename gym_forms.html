@@ -1,0 +1,34 @@
+<!-- gym_forms.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym Map</title>
+    <link rel="stylesheet" href="main.css" />
+</head>
+<script>
+    function callBackend() {
+        fetch("http://localhost:8080/your-project-name/backend")
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                alert(data);
+            })
+            .catch(error => console.error("Error:", error));
+    }
+</script>
+<body>
+<div class="page">
+    <h1>Gym Forms</h1>
+
+</div>
+
+<div class="back-container">
+    <a href="index.html">
+        <button class="gym-map-btn">Back</button>
+    </a>
+</div>
+
+</body>
+</html>
