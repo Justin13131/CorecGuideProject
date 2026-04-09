@@ -1,0 +1,87 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gym App</title>
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<script>
+    function callBackend() {
+        fetch("http://localhost:8081/CorecGuideProject/backend")
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                alert(data);
+            })
+            .catch(error => console.error("Error:", error));
+    }
+</script>
+<body>
+<div class="page">
+    <div class="hero">
+        <div class="hero-overlay">
+            <h1>Corec Gym Menu</h1>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:40px; border-radius:14px;">
+        <div class="button-grid" style="display:flex; gap:16px; justify-content:center;">
+
+            <a href="gym_map.html">
+                <button class="machine-btn red">Gym Map</button>
+            </a>
+
+            <a href="machine_help.html">
+                <button class="machine-btn blue">Machine Help</button>
+            </a>
+
+            <a href="gym_forms.html">
+                <button class="machine-btn green">Gym Forms</button>
+            </a>
+
+        </div>
+    </div>
+    <div class="auth-box">
+        <div class="auth-buttons">
+            <button class="auth-btn" onclick="toggleAbout()">About Us</button>
+        </div>
+    </div>
+
+    <!-- Hidden box -->
+    <div id="aboutBox" class="about-box">
+        <p>
+            <strong>
+            We are a team in Sprint 2026 TECH120, trying to resolve gym anxiety issue
+            </strong>
+        </p>
+    </div>
+    <div class="auth-box">
+        <div class="auth-buttons">
+
+            <a href="login.html">
+                <button class="auth-btn">Login</button>
+            </a>
+
+            <a href="createAccount.html">
+                <button class="auth-btn">Create Account</button>
+            </a>
+
+        </div>
+    </div>
+    <div class="note">Select a page</div>
+</div>
+<script>
+    function toggleAbout() {
+        const box = document.getElementById("aboutBox");
+
+        if (box.style.display === "block") {
+            box.style.display = "none";
+        } else {
+            box.style.display = "block";
+        }
+    }
+</script>
+</body>
+</html>

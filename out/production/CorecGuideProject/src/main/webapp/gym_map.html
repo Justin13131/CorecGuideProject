@@ -1,0 +1,45 @@
+<!-- gym_help.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym Map</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<script>
+  function callBackend() {
+    fetch("http://localhost:8081/CorecGuideProject/account")
+            .then(response => response.text())
+            .then(data => {
+              console.log(data);
+              alert(data);
+            })
+            .catch(error => console.error("Error:", error));
+  }
+</script>
+<body>
+<div class="page">
+  <h1>Gym Map</h1>
+</div>
+<div class="auth-box">
+  <div class="auth-buttons">
+
+    <a href="login.html">
+      <button class="auth-btn">Login</button>
+    </a>
+
+    <a href="createAccount.html">
+      <button class="auth-btn">Create Account</button>
+    </a>
+
+  </div>
+</div>
+<div class="back-container">
+  <a href="index.html">
+    <button class="gym-map-btn">Back</button>
+  </a>
+</div>
+
+</body>
+</html>

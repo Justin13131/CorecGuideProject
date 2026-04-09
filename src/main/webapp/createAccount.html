@@ -1,0 +1,56 @@
+<!-- gym_help.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account</title>
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+
+<script>
+  function createAccount() {
+    const username = document.getElementById("newUsername").value.trim();
+    const password = document.getElementById("newPassword").value;
+
+    fetch("http://localhost:8081/CorecGuideProject_war_exploded/account", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: "action=create"
+              + "&username=" + encodeURIComponent(username)
+              + "&password=" + encodeURIComponent(password)
+    })
+            .then(response => response.text())
+            .then(data => {
+              alert(data);
+            })
+            .catch(error => {
+              console.error("Error:", error);
+            });
+  }
+</script>
+<body>
+<div class="page">
+  <h1>Create Account</h1>
+</div>
+<div class="form-box">
+  <div class="login-form">
+    <label for="newUsername">Username</label>
+    <input type="text" id="newUsername" placeholder="Enter username" />
+
+    <label for="newPassword">Password</label>
+    <input type="password" id="newPassword" placeholder="Enter password" />
+
+    <button class="auth-btn" onclick="createAccount()">Create Account</button>
+  </div>
+</div>
+<div class="back-container">
+  <a href="index.html">
+    <button class="gym-map-btn">Back</button>
+  </a>
+</div>
+
+</body>
+</html>

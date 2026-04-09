@@ -1,0 +1,64 @@
+<!-- gym_help.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<script>
+    function loginUser() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+
+        fetch("http://localhost:8081/CorecGuideProject/account", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "action=login"
+                + "&username=" + encodeURIComponent(username)
+                + "&password=" + encodeURIComponent(password)
+        })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    }
+</script>
+<body>
+<div class="page">
+    <h1>Login</h1>
+</div>
+<div class="form-box">
+    <div class="login-form">
+
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" />
+
+        <button class="auth-btn" onclick="loginUser()">Login</button>
+
+    </div>
+</div>
+<div class="auth-box compact">
+    <div class="auth-switch">
+        <p>Don't have an account?</p>
+        <a href="createAccount.html" class="auth-btn">Create Account</a>
+    </div>
+</div>
+
+<div class="back-container">
+    <a href="index.html">
+        <button class="gym-map-btn">Back</button>
+    </a>
+</div>
+
+</body>
+</html>
