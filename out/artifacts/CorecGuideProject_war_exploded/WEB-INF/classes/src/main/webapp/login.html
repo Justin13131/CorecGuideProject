@@ -1,4 +1,3 @@
-<!-- gym_help.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,46 +6,25 @@
     <title>Login</title>
     <link rel="stylesheet" href="css/main.css" />
 </head>
-<script>
-    function loginUser() {
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
-
-        fetch("http://localhost:8081/CorecGuideProject/account", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: "action=login"
-                + "&username=" + encodeURIComponent(username)
-                + "&password=" + encodeURIComponent(password)
-        })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
-    }
-</script>
 <body>
 <div class="page">
     <h1>Login</h1>
 </div>
+
 <div class="form-box">
     <div class="login-form">
-
         <label for="username">Username</label>
         <input type="text" id="username" placeholder="Enter username" />
 
         <label for="password">Password</label>
         <input type="password" id="password" placeholder="Enter password" />
 
-        <button class="auth-btn" onclick="loginUser()">Login</button>
+        <p id="errorMsg" style="color:red;"></p>
 
+        <button type="button" class="auth-btn" onclick="loginUser()">Login</button>
     </div>
 </div>
+
 <div class="auth-box compact">
     <div class="auth-switch">
         <p>Don't have an account?</p>
@@ -56,9 +34,50 @@
 
 <div class="back-container">
     <a href="index.html">
-        <button class="gym-map-btn">Back</button>
+        <button type="button" class="gym-map-btn">Back</button>
     </a>
 </div>
 
+<script>
+    function loginUser() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        const errorMsg = document.getElementById("errorMsg");
+
+        errorMsg.innerText = "";
+
+        fetch("account", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "action=login"
+                + "&username=" + encodeURIComponent(username)
+                + "&password=" + encodeURIComponent(password)
+        })
+            .then(async (response) => {
+                const text = await response.text();
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status + ": " + text);
+                }
+
+                return text;
+            })
+            .then((data) => {
+                if (data.trim() === "success") {
+                    localStorage.setItem("username", username);
+                    window.location.href = "index.html";
+                } else {
+                    errorMsg.innerText = data;
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                errorMsg.innerText = error.message;
+            });
+    }
+</script>
 </body>
 </html>
+

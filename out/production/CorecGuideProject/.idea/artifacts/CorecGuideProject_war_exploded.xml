@@ -7,6 +7,9 @@
         <element id="directory" name="classes">
           <element id="module-output" name="CorecGuideProject" />
         </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$USER_HOME$/Downloads/mysql-connector-j-9.6.0/mysql-connector-j-9.6.0/mysql-connector-j-9.6.0.jar" />
+        </element>
       </element>
     </root>
   </artifact>

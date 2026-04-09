@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,36 +31,34 @@ public class Account extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if (action == null || username == null || password == null
-                || username.trim().isEmpty() || password.trim().isEmpty()) {
-            out.println("Missing username or password.");
+        if (action == null || username == null || password == null ||
+                username.trim().isEmpty() || password.trim().isEmpty()) {
+            out.write("Missing input");
             return;
         }
-
-        username = username.trim();
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                if (action.equals("create")) {
-                    createAccount(conn, username, password, out);
-                } else if (action.equals("login")) {
-                    loginAccount(conn, username, password, out);
+
+                if ("create".equals(action)) {
+                    createAccount(conn, username.trim(), password, out);
+                } else if ("login".equals(action)) {
+                    loginAccount(conn, username.trim(), password, out);
                 } else {
-                    out.println("Invalid action.");
+                    out.write("Invalid action");
                 }
             }
 
-        } catch (ClassNotFoundException e) {
-            out.println("MySQL JDBC driver not found.");
-        } catch (SQLException e) {
-            out.println("Database error: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.write("Server error: " + e.getMessage());
         }
     }
 
     private void createAccount(Connection conn, String username, String password, PrintWriter out)
-            throws SQLException {
+            throws Exception {
 
         String checkSql = "SELECT username FROM accounts WHERE username = ?";
         try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -69,7 +66,7 @@ public class Account extends HttpServlet {
             ResultSet rs = checkStmt.executeQuery();
 
             if (rs.next()) {
-                out.println("Username already exists.");
+                out.write("Username already exists");
                 return;
             }
         }
@@ -79,24 +76,24 @@ public class Account extends HttpServlet {
             insertStmt.setString(1, username);
             insertStmt.setString(2, password);
             insertStmt.executeUpdate();
-            out.println("Account created successfully.");
+            out.write("success");
         }
     }
 
     private void loginAccount(Connection conn, String username, String password, PrintWriter out)
-            throws SQLException {
+            throws Exception {
 
-        String loginSql = "SELECT * FROM accounts WHERE username = ? AND password = ?";
-        try (PreparedStatement loginStmt = conn.prepareStatement(loginSql)) {
-            loginStmt.setString(1, username);
-            loginStmt.setString(2, password);
+        String sql = "SELECT * FROM accounts WHERE username = ? AND password = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
 
-            ResultSet rs = loginStmt.executeQuery();
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                out.println("Login successful.");
+                out.write("success");
             } else {
-                out.println("Invalid username or password.");
+                out.write("Invalid username or password");
             }
         }
     }

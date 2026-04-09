@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gymmit</title>
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body onload="initializeGymmit()">
+
+<div style="width:100%; display:flex; justify-content:flex-end; padding:16px 40px; box-sizing:border-box;">
+    <div style="background:#6c737c; color:white; font-size:18px; font-weight:700; padding:10px 24px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+        User: <span id="userDisplay">Guest</span>
+    </div>
+</div>
+
+<div class="page">
+    <div class="hero">
+        <div class="hero-overlay">
+            <h1>Gymmit</h1>
+        </div>
+    </div>
+
+    <div class="form-box gymmit-form-box">
+        <div class="login-form">
+            <h2 class="gymmit-title">Create a Post</h2>
+
+            <label for="topicInput">Topic</label>
+            <input type="text" id="topicInput" placeholder="Enter topic" />
+
+            <label for="contentInput">Content</label>
+            <textarea id="contentInput" placeholder="Write your post here"></textarea>
+
+            <p id="postError" style="color:red;"></p>
+
+            <button class="auth-btn" onclick="submitPost()">Post</button>
+        </div>
+    </div>
+
+    <div id="postsContainer"></div>
+
+    <div class="back-container">
+        <a href="index.html">
+            <button class="gym-map-btn">Back</button>
+        </a>
+    </div>
+</div>
+
+<script>
+    function initializeGymmit() {
+        loadUser();
+        loadPosts();
+    }
+
+    function loadUser() {
+        const username = localStorage.getItem("username");
+        const userDisplay = document.getElementById("userDisplay");
+
+        if (username && username.trim() !== "") {
+            userDisplay.textContent = username;
+        } else {
+            userDisplay.textContent = "Guest";
+        }
+    }
+
+    function submitPost() {
+        const username = localStorage.getItem("username") || "Guest";
+        const topic = document.getElementById("topicInput").value.trim();
+        const content = document.getElementById("contentInput").value.trim();
+        const postError = document.getElementById("postError");
+
+        postError.innerText = "";
+
+        fetch("gymmit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "username=" + encodeURIComponent(username)
+                + "&topic=" + encodeURIComponent(topic)
+                + "&content=" + encodeURIComponent(content)
+        })
+            .then(async (response) => {
+                const text = await response.text();
+
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status + ": " + text);
+                }
+
+                return text;
+            })
+            .then((data) => {
+                if (data.trim() === "success") {
+                    document.getElementById("topicInput").value = "";
+                    document.getElementById("contentInput").value = "";
+                    loadPosts();
+                } else {
+                    postError.innerText = data;
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                postError.innerText = "Post failed";
+            });
+    }
+
+    function loadPosts() {
+        fetch("gymmit")
+            .then(response => response.json())
+            .then(posts => {
+                const postsContainer = document.getElementById("postsContainer");
+                postsContainer.innerHTML = "";
+
+                if (posts.length === 0) {
+                    postsContainer.innerHTML = `
+                        <div class="gymmit-post-box">
+                            <p><strong>Username:</strong> Guest</p>
+                            <p><strong>Topic:</strong> Welcome</p>
+                            <p><strong>Content:</strong> Welcome to Gymmit. Share your gym thoughts here.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const postBox = document.createElement("div");
+                    postBox.className = "gymmit-post-box";
+
+                    postBox.innerHTML = `
+                        <p><strong>Username:</strong> ${post.username}</p>
+                        <p><strong>Topic:</strong> ${post.topic}</p>
+                        <p><strong>Content:</strong> ${post.content}</p>
+                    `;
+
+                    postsContainer.appendChild(postBox);
+                });
+            })
+            .catch(error => {
+                console.error("Error loading posts:", error);
+            });
+    }
+</script>
+
+</body>
+</html>
